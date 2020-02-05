@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  builder:
+    image: mongo:latest
+    container_name: synapse_mongo
+    ports:
+      - "27030:27017"
+    volumes:
+      - mongo:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: synapse
+      MONGO_INITDB_ROOT_PASSWORD: secret
+
+volumes:
+  mongo:
