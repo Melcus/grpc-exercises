@@ -30,11 +30,11 @@ func main() {
 
 	//doServerStreaming(client)
 
-	//doClientStreaming(client)
+	doClientStreaming(client)
 
 	//doBiDiStreaming(client)
 
-	doErrorUnary(client)
+	//doErrorUnary(client)
 }
 
 func doServerStreaming(client calculatorpb.CalculatorServiceClient) {

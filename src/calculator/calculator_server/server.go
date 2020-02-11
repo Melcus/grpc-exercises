@@ -64,6 +64,8 @@ func (*server) Average(stream calculatorpb.CalculatorService_AverageServer) erro
 		if err != nil {
 			log.Fatalf("Error while reading client stream: %v", err)
 		}
+
+		fmt.Printf("Received number %v\n", request.GetNumber())
 		result += request.GetNumber()
 		count++
 	}
