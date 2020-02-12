@@ -4,13 +4,30 @@ package blog;
 
 option go_package = "blogpb";
 
-message Blog {
+message Article {
     string id = 1;
     string author_id = 2;
     string title = 3;
     string content = 4;
 }
 
-service BlogService {
+message CreateArticleRequest {
+    Article article = 1;
+}
 
+message CreateArticleResponse {
+    Article article = 1; // will have an article_id
+}
+
+message ReadArticleRequest {
+    string article_id = 1;
+}
+
+message ReadArticleResponse {
+    Article article = 1;
+}
+
+service ArticleService {
+    rpc CreateArticle (CreateArticleRequest) returns (CreateArticleResponse);
+    rpc ReadArticle (ReadArticleRequest) returns (ReadArticleResponse); // return NOT_FOUND if not found
 }

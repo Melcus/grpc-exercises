@@ -8,6 +8,8 @@ import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -22,7 +24,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type Blog struct {
+type Article struct {
 	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	AuthorId             string   `protobuf:"bytes,2,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`
 	Title                string   `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
@@ -32,77 +34,244 @@ type Blog struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Blog) Reset()         { *m = Blog{} }
-func (m *Blog) String() string { return proto.CompactTextString(m) }
-func (*Blog) ProtoMessage()    {}
-func (*Blog) Descriptor() ([]byte, []int) {
+func (m *Article) Reset()         { *m = Article{} }
+func (m *Article) String() string { return proto.CompactTextString(m) }
+func (*Article) ProtoMessage()    {}
+func (*Article) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a4b0406114889fe6, []int{0}
 }
 
-func (m *Blog) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Blog.Unmarshal(m, b)
+func (m *Article) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Article.Unmarshal(m, b)
 }
-func (m *Blog) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Blog.Marshal(b, m, deterministic)
+func (m *Article) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Article.Marshal(b, m, deterministic)
 }
-func (m *Blog) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Blog.Merge(m, src)
+func (m *Article) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Article.Merge(m, src)
 }
-func (m *Blog) XXX_Size() int {
-	return xxx_messageInfo_Blog.Size(m)
+func (m *Article) XXX_Size() int {
+	return xxx_messageInfo_Article.Size(m)
 }
-func (m *Blog) XXX_DiscardUnknown() {
-	xxx_messageInfo_Blog.DiscardUnknown(m)
+func (m *Article) XXX_DiscardUnknown() {
+	xxx_messageInfo_Article.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Blog proto.InternalMessageInfo
+var xxx_messageInfo_Article proto.InternalMessageInfo
 
-func (m *Blog) GetId() string {
+func (m *Article) GetId() string {
 	if m != nil {
 		return m.Id
 	}
 	return ""
 }
 
-func (m *Blog) GetAuthorId() string {
+func (m *Article) GetAuthorId() string {
 	if m != nil {
 		return m.AuthorId
 	}
 	return ""
 }
 
-func (m *Blog) GetTitle() string {
+func (m *Article) GetTitle() string {
 	if m != nil {
 		return m.Title
 	}
 	return ""
 }
 
-func (m *Blog) GetContent() string {
+func (m *Article) GetContent() string {
 	if m != nil {
 		return m.Content
 	}
 	return ""
 }
 
+type CreateArticleRequest struct {
+	Article              *Article `protobuf:"bytes,1,opt,name=article,proto3" json:"article,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *CreateArticleRequest) Reset()         { *m = CreateArticleRequest{} }
+func (m *CreateArticleRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateArticleRequest) ProtoMessage()    {}
+func (*CreateArticleRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a4b0406114889fe6, []int{1}
+}
+
+func (m *CreateArticleRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateArticleRequest.Unmarshal(m, b)
+}
+func (m *CreateArticleRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateArticleRequest.Marshal(b, m, deterministic)
+}
+func (m *CreateArticleRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateArticleRequest.Merge(m, src)
+}
+func (m *CreateArticleRequest) XXX_Size() int {
+	return xxx_messageInfo_CreateArticleRequest.Size(m)
+}
+func (m *CreateArticleRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateArticleRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateArticleRequest proto.InternalMessageInfo
+
+func (m *CreateArticleRequest) GetArticle() *Article {
+	if m != nil {
+		return m.Article
+	}
+	return nil
+}
+
+type CreateArticleResponse struct {
+	Article              *Article `protobuf:"bytes,1,opt,name=article,proto3" json:"article,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *CreateArticleResponse) Reset()         { *m = CreateArticleResponse{} }
+func (m *CreateArticleResponse) String() string { return proto.CompactTextString(m) }
+func (*CreateArticleResponse) ProtoMessage()    {}
+func (*CreateArticleResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a4b0406114889fe6, []int{2}
+}
+
+func (m *CreateArticleResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateArticleResponse.Unmarshal(m, b)
+}
+func (m *CreateArticleResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateArticleResponse.Marshal(b, m, deterministic)
+}
+func (m *CreateArticleResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateArticleResponse.Merge(m, src)
+}
+func (m *CreateArticleResponse) XXX_Size() int {
+	return xxx_messageInfo_CreateArticleResponse.Size(m)
+}
+func (m *CreateArticleResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateArticleResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateArticleResponse proto.InternalMessageInfo
+
+func (m *CreateArticleResponse) GetArticle() *Article {
+	if m != nil {
+		return m.Article
+	}
+	return nil
+}
+
+type ReadArticleRequest struct {
+	ArticleId            string   `protobuf:"bytes,1,opt,name=article_id,json=articleId,proto3" json:"article_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ReadArticleRequest) Reset()         { *m = ReadArticleRequest{} }
+func (m *ReadArticleRequest) String() string { return proto.CompactTextString(m) }
+func (*ReadArticleRequest) ProtoMessage()    {}
+func (*ReadArticleRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a4b0406114889fe6, []int{3}
+}
+
+func (m *ReadArticleRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ReadArticleRequest.Unmarshal(m, b)
+}
+func (m *ReadArticleRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ReadArticleRequest.Marshal(b, m, deterministic)
+}
+func (m *ReadArticleRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReadArticleRequest.Merge(m, src)
+}
+func (m *ReadArticleRequest) XXX_Size() int {
+	return xxx_messageInfo_ReadArticleRequest.Size(m)
+}
+func (m *ReadArticleRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ReadArticleRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ReadArticleRequest proto.InternalMessageInfo
+
+func (m *ReadArticleRequest) GetArticleId() string {
+	if m != nil {
+		return m.ArticleId
+	}
+	return ""
+}
+
+type ReadArticleResponse struct {
+	Article              *Article `protobuf:"bytes,1,opt,name=article,proto3" json:"article,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ReadArticleResponse) Reset()         { *m = ReadArticleResponse{} }
+func (m *ReadArticleResponse) String() string { return proto.CompactTextString(m) }
+func (*ReadArticleResponse) ProtoMessage()    {}
+func (*ReadArticleResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a4b0406114889fe6, []int{4}
+}
+
+func (m *ReadArticleResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ReadArticleResponse.Unmarshal(m, b)
+}
+func (m *ReadArticleResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ReadArticleResponse.Marshal(b, m, deterministic)
+}
+func (m *ReadArticleResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReadArticleResponse.Merge(m, src)
+}
+func (m *ReadArticleResponse) XXX_Size() int {
+	return xxx_messageInfo_ReadArticleResponse.Size(m)
+}
+func (m *ReadArticleResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ReadArticleResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ReadArticleResponse proto.InternalMessageInfo
+
+func (m *ReadArticleResponse) GetArticle() *Article {
+	if m != nil {
+		return m.Article
+	}
+	return nil
+}
+
 func init() {
-	proto.RegisterType((*Blog)(nil), "blog.Blog")
+	proto.RegisterType((*Article)(nil), "blog.Article")
+	proto.RegisterType((*CreateArticleRequest)(nil), "blog.CreateArticleRequest")
+	proto.RegisterType((*CreateArticleResponse)(nil), "blog.CreateArticleResponse")
+	proto.RegisterType((*ReadArticleRequest)(nil), "blog.ReadArticleRequest")
+	proto.RegisterType((*ReadArticleResponse)(nil), "blog.ReadArticleResponse")
 }
 
 func init() { proto.RegisterFile("blog/blogpb/blog.proto", fileDescriptor_a4b0406114889fe6) }
 
 var fileDescriptor_a4b0406114889fe6 = []byte{
-	// 148 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x4b, 0xca, 0xc9, 0x4f,
-	0xd7, 0x07, 0x11, 0x05, 0x49, 0x60, 0x4a, 0xaf, 0xa0, 0x28, 0xbf, 0x24, 0x5f, 0x88, 0x05, 0xc4,
-	0x56, 0x4a, 0xe6, 0x62, 0x71, 0xca, 0xc9, 0x4f, 0x17, 0xe2, 0xe3, 0x62, 0xca, 0x4c, 0x91, 0x60,
-	0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x62, 0xca, 0x4c, 0x11, 0x92, 0xe6, 0xe2, 0x4c, 0x2c, 0x2d, 0xc9,
-	0xc8, 0x2f, 0x8a, 0xcf, 0x4c, 0x91, 0x60, 0x02, 0x0b, 0x73, 0x40, 0x04, 0x3c, 0x53, 0x84, 0x44,
-	0xb8, 0x58, 0x4b, 0x32, 0x4b, 0x72, 0x52, 0x25, 0x98, 0xc1, 0x12, 0x10, 0x8e, 0x90, 0x04, 0x17,
-	0x7b, 0x72, 0x7e, 0x5e, 0x49, 0x6a, 0x5e, 0x89, 0x04, 0x0b, 0x58, 0x1c, 0xc6, 0x35, 0xe2, 0xe5,
-	0xe2, 0x06, 0x59, 0x12, 0x9c, 0x5a, 0x54, 0x96, 0x99, 0x9c, 0xea, 0xc4, 0x11, 0xc5, 0x06, 0x71,
-	0x4e, 0x12, 0x1b, 0xd8, 0x29, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x5d, 0x72, 0x6e, 0x8c,
-	0xa4, 0x00, 0x00, 0x00,
+	// 271 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x52, 0x3d, 0x4f, 0xc3, 0x30,
+	0x10, 0x55, 0x42, 0x69, 0x9a, 0xab, 0xda, 0xe1, 0x28, 0xc8, 0xa4, 0x42, 0x42, 0x59, 0x60, 0x2a,
+	0x52, 0xbb, 0xf3, 0x51, 0x16, 0xba, 0x86, 0x8d, 0xa5, 0x4a, 0xe2, 0x03, 0x2c, 0x45, 0x71, 0x48,
+	0xae, 0xfc, 0x1c, 0x7e, 0x2b, 0xaa, 0xed, 0x20, 0x5a, 0x32, 0xd0, 0xc5, 0xf6, 0xbd, 0x77, 0x1f,
+	0xef, 0x59, 0x07, 0x67, 0x59, 0xa1, 0xdf, 0x6e, 0xb6, 0x47, 0x95, 0x99, 0x6b, 0x56, 0xd5, 0x9a,
+	0x35, 0xf6, 0xb6, 0xef, 0xf8, 0x15, 0x82, 0x87, 0x9a, 0x55, 0x5e, 0x10, 0x8e, 0xc1, 0x57, 0x52,
+	0x78, 0x97, 0xde, 0x75, 0x98, 0xf8, 0x4a, 0xe2, 0x14, 0xc2, 0x74, 0xc3, 0xef, 0xba, 0x5e, 0x2b,
+	0x29, 0x7c, 0x03, 0x0f, 0x2c, 0xb0, 0x92, 0x38, 0x81, 0x63, 0x56, 0x5c, 0x90, 0x38, 0x32, 0x84,
+	0x0d, 0x50, 0x40, 0x90, 0xeb, 0x92, 0xa9, 0x64, 0xd1, 0x33, 0x78, 0x1b, 0xc6, 0x77, 0x30, 0x79,
+	0xac, 0x29, 0x65, 0x72, 0xd3, 0x12, 0xfa, 0xd8, 0x50, 0xc3, 0x78, 0x05, 0x41, 0x6a, 0x11, 0x33,
+	0x79, 0x38, 0x1f, 0xcd, 0x8c, 0xc6, 0x36, 0xad, 0x65, 0xe3, 0x7b, 0x38, 0xdd, 0x6b, 0xd0, 0x54,
+	0xba, 0x6c, 0xe8, 0xff, 0x1d, 0x16, 0x80, 0x09, 0xa5, 0x72, 0x4f, 0xc0, 0x05, 0x80, 0x4b, 0x58,
+	0xff, 0xb8, 0x0f, 0x1d, 0xb2, 0x92, 0xf1, 0x2d, 0x9c, 0xec, 0x14, 0x1d, 0x38, 0x74, 0xfe, 0xe5,
+	0xc1, 0xd8, 0x81, 0xcf, 0x54, 0x7f, 0xaa, 0x9c, 0xf0, 0x09, 0x46, 0x3b, 0x4e, 0x30, 0xb2, 0xb5,
+	0x5d, 0xff, 0x13, 0x4d, 0x3b, 0x39, 0xa7, 0x62, 0x09, 0xc3, 0x5f, 0xe2, 0x50, 0xd8, 0xdc, 0xbf,
+	0x26, 0xa3, 0xf3, 0x0e, 0xc6, 0xf6, 0x58, 0x0e, 0x5e, 0xfa, 0x76, 0x37, 0xb2, 0xbe, 0xd9, 0x8b,
+	0xc5, 0x77, 0x00, 0x00, 0x00, 0xff, 0xff, 0x14, 0xb0, 0x78, 0x3a, 0x31, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -113,36 +282,110 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// BlogServiceClient is the client API for BlogService service.
+// ArticleServiceClient is the client API for ArticleService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type BlogServiceClient interface {
+type ArticleServiceClient interface {
+	CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*CreateArticleResponse, error)
+	ReadArticle(ctx context.Context, in *ReadArticleRequest, opts ...grpc.CallOption) (*ReadArticleResponse, error)
 }
 
-type blogServiceClient struct {
+type articleServiceClient struct {
 	cc *grpc.ClientConn
 }
 
-func NewBlogServiceClient(cc *grpc.ClientConn) BlogServiceClient {
-	return &blogServiceClient{cc}
+func NewArticleServiceClient(cc *grpc.ClientConn) ArticleServiceClient {
+	return &articleServiceClient{cc}
 }
 
-// BlogServiceServer is the server API for BlogService service.
-type BlogServiceServer interface {
+func (c *articleServiceClient) CreateArticle(ctx context.Context, in *CreateArticleRequest, opts ...grpc.CallOption) (*CreateArticleResponse, error) {
+	out := new(CreateArticleResponse)
+	err := c.cc.Invoke(ctx, "/blog.ArticleService/CreateArticle", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
-// UnimplementedBlogServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedBlogServiceServer struct {
+func (c *articleServiceClient) ReadArticle(ctx context.Context, in *ReadArticleRequest, opts ...grpc.CallOption) (*ReadArticleResponse, error) {
+	out := new(ReadArticleResponse)
+	err := c.cc.Invoke(ctx, "/blog.ArticleService/ReadArticle", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
-func RegisterBlogServiceServer(s *grpc.Server, srv BlogServiceServer) {
-	s.RegisterService(&_BlogService_serviceDesc, srv)
+// ArticleServiceServer is the server API for ArticleService service.
+type ArticleServiceServer interface {
+	CreateArticle(context.Context, *CreateArticleRequest) (*CreateArticleResponse, error)
+	ReadArticle(context.Context, *ReadArticleRequest) (*ReadArticleResponse, error)
 }
 
-var _BlogService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "blog.BlogService",
-	HandlerType: (*BlogServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "blog/blogpb/blog.proto",
+// UnimplementedArticleServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedArticleServiceServer struct {
+}
+
+func (*UnimplementedArticleServiceServer) CreateArticle(ctx context.Context, req *CreateArticleRequest) (*CreateArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateArticle not implemented")
+}
+func (*UnimplementedArticleServiceServer) ReadArticle(ctx context.Context, req *ReadArticleRequest) (*ReadArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadArticle not implemented")
+}
+
+func RegisterArticleServiceServer(s *grpc.Server, srv ArticleServiceServer) {
+	s.RegisterService(&_ArticleService_serviceDesc, srv)
+}
+
+func _ArticleService_CreateArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServiceServer).CreateArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/blog.ArticleService/CreateArticle",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServiceServer).CreateArticle(ctx, req.(*CreateArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ArticleService_ReadArticle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReadArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArticleServiceServer).ReadArticle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/blog.ArticleService/ReadArticle",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArticleServiceServer).ReadArticle(ctx, req.(*ReadArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _ArticleService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "blog.ArticleService",
+	HandlerType: (*ArticleServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateArticle",
+			Handler:    _ArticleService_CreateArticle_Handler,
+		},
+		{
+			MethodName: "ReadArticle",
+			Handler:    _ArticleService_ReadArticle_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "blog/blogpb/blog.proto",
 }
