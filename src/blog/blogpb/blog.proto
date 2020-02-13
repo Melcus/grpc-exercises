@@ -11,6 +11,14 @@ message Article {
     string content = 4;
 }
 
+service ArticleService {
+    rpc CreateArticle (CreateArticleRequest) returns (CreateArticleResponse);
+    rpc ReadArticle (ReadArticleRequest) returns (ReadArticleResponse); // return NOT_FOUND if not found
+    rpc UpdateArticle (UpdateArticleRequest) returns (UpdateArticleResponse); // return NOT_FOUND if not found
+    rpc DeleteArticle (DeleteArticleRequest) returns (DeleteArticleResponse); // returns NOT_FOUND if not found
+    rpc ListArticles (ListArticlesRequest) returns (stream ListArticlesResponse);
+}
+
 message CreateArticleRequest {
     Article article = 1;
 }
@@ -27,7 +35,26 @@ message ReadArticleResponse {
     Article article = 1;
 }
 
-service ArticleService {
-    rpc CreateArticle (CreateArticleRequest) returns (CreateArticleResponse);
-    rpc ReadArticle (ReadArticleRequest) returns (ReadArticleResponse); // return NOT_FOUND if not found
+message UpdateArticleRequest {
+    Article article = 1;
+}
+
+message UpdateArticleResponse {
+    Article article = 1;
+}
+
+message DeleteArticleRequest {
+    string article_id = 1;
+}
+
+message DeleteArticleResponse {
+    bool success = 1;
+}
+
+message ListArticlesRequest {
+
+}
+
+message ListArticlesResponse {
+    Article article = 1;
 }

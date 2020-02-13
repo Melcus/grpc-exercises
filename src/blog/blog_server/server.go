@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 	"log"
 	"net"
@@ -75,13 +76,101 @@ func (*server) ReadArticle(ctx context.Context, request *blogpb.ReadArticleReque
 		return nil, status.Errorf(codes.NotFound, fmt.Sprintf("Cannot find Article with specified ID: %v", err))
 	}
 	return &blogpb.ReadArticleResponse{
-		Article: &blogpb.Article{
-			Id:       data.ID.Hex(),
-			AuthorId: data.AuthorId,
-			Title:    data.Title,
-			Content:  data.Content,
-		},
+		Article: dataToArticlePB(data),
 	}, nil
+}
+
+func (*server) UpdateArticle(ctx context.Context, request *blogpb.UpdateArticleRequest) (*blogpb.UpdateArticleResponse, error) {
+	fmt.Println("Update Article Request")
+	article := request.GetArticle()
+
+	objectId, err := primitive.ObjectIDFromHex(article.GetId())
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, fmt.Sprintf("Cannot parse ID"))
+	}
+
+	data := &Article{}
+
+	result := articlesCollection.FindOne(context.Background(), bson.M{"_id": objectId})
+	if err := result.Decode(data); err != nil {
+		return nil, status.Errorf(codes.NotFound, fmt.Sprintf("Cannot find Article with specified ID: %v", err))
+	}
+
+	data.AuthorId = article.GetAuthorId()
+	data.Content = article.GetContent()
+	data.Title = article.GetTitle()
+
+	_, updateErr := articlesCollection.ReplaceOne(context.Background(), bson.M{"_id": objectId}, data)
+	if updateErr != nil {
+		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Cannot update object in MongoDB: %v\n", updateErr))
+	}
+
+	return &blogpb.UpdateArticleResponse{
+		Article: dataToArticlePB(data),
+	}, nil
+}
+
+func (*server) DeleteArticle(ctx context.Context, request *blogpb.DeleteArticleRequest) (*blogpb.DeleteArticleResponse, error) {
+	fmt.Println("Delete Article Request")
+
+	objectId, err := primitive.ObjectIDFromHex(request.GetArticleId())
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, fmt.Sprintf("Cannot parse ID"))
+	}
+
+	deleteResponse, deleteErr := articlesCollection.DeleteOne(context.Background(), bson.M{"_id": objectId})
+	if deleteErr != nil {
+		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Cannot delete object from MongoDB: %v\n", deleteErr))
+	}
+	if deleteResponse.DeletedCount == 0 {
+		return nil, status.Errorf(codes.NotFound, fmt.Sprintf("Cannot find object in MongoDB"))
+	}
+
+	return &blogpb.DeleteArticleResponse{
+		Success: true,
+	}, nil
+}
+
+func (*server) ListArticles(request *blogpb.ListArticlesRequest, stream blogpb.ArticleService_ListArticlesServer) error {
+	fmt.Println("List Articles Request")
+
+	cursor, err := articlesCollection.Find(context.Background(), bson.D{})
+	if err != nil {
+		return status.Errorf(codes.Internal, fmt.Sprintf("Unknown internal error %v \n", err))
+	}
+	defer func() {
+		cursorCloseErr := cursor.Close(context.Background())
+		if cursorCloseErr != nil {
+			log.Fatalf("Failed to close MongoDB cursor")
+		}
+	}()
+
+	for cursor.Next(context.Background()) {
+		data := &Article{}
+		err := cursor.Decode(data)
+		if err != nil {
+			return status.Errorf(codes.Internal, fmt.Sprintf("Error while decoding data from MongoDB %v \n", err))
+		}
+
+		_ = stream.Send(&blogpb.ListArticlesResponse{
+			Article: dataToArticlePB(data),
+		})
+	}
+
+	if err := cursor.Err(); err != nil {
+		return status.Errorf(codes.Internal, fmt.Sprintf("Error while decoding data from MongoDB %v \n", err))
+	}
+
+	return nil
+}
+
+func dataToArticlePB(data *Article) *blogpb.Article {
+	return &blogpb.Article{
+		Id:       data.ID.Hex(),
+		AuthorId: data.AuthorId,
+		Title:    data.Title,
+		Content:  data.Content,
+	}
 }
 
 func main() {
@@ -111,7 +200,7 @@ func main() {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 
-	tls := true
+	tls := false
 	var opts []grpc.ServerOption
 	if tls {
 		creds, sslErr := credentials.NewServerTLSFromFile("ssl/server.crt", "ssl/server.pem")
@@ -124,6 +213,8 @@ func main() {
 
 	s := grpc.NewServer(opts...)
 	blogpb.RegisterArticleServiceServer(s, &server{})
+	// Register reflection service on gRPC server
+	reflection.Register(s)
 
 	go func() {
 		fmt.Println("Starting server")
